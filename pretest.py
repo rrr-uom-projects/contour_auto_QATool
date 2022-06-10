@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from utils import k_fold_split_train_val_test, RunningAverage
-from model import patchPredictor, patchPredictor_funnel
+from model import patchPredictor
 from datasets import patchPredictor_dataset
 
 def main():
