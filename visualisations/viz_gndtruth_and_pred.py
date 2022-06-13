@@ -4,6 +4,7 @@ import torch
 import open3d as o3d
 import pyvista
 from copy import deepcopy
+from os.path import join
 
 def pyvistarise(mesh):
     return pyvista.PolyData(np.asarray(mesh.vertices), np.insert(np.asarray(mesh.triangles), 0, 3, axis=1), deep=True, n_faces=len(mesh.triangles))
@@ -51,18 +52,18 @@ def visualise_pertubations(mesh, verts, classes, pred_classes):
     print(camera_pos)
 
 def main():
-    def_num = "7"
-    pat_num = "629"
-
-    verts = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/graph_objects/0522c0{pat_num}_R_{def_num}.pt").pos.numpy()
-    faces = np.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/triangles_smooth/0522c0{pat_num}_R_{def_num}.npy")
+    patient_fname = "patient_fname"                                 ## TODO: update name variable here ##
+    source_dir = "/path/to/directory/containing/preprocessed/data/" ## TODO: update path variable here ##
+    
+    verts = torch.load(join(source_dir, "graph_objects/", f"{patient_fname}.pt")).pos.numpy()
+    faces = np.load(join(source_dir, "triangles_smooth/", f"{patient_fname}.npy"))
     perturbed_mesh = o3d.geometry.TriangleMesh()
     perturbed_mesh.vertices = o3d.utility.Vector3dVector(verts)
     perturbed_mesh.triangles = o3d.utility.Vector3iVector(faces)
 
     perturbed_mesh.compute_vertex_normals()
-    classes = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/signed_classes/0522c0{pat_num}_R_{def_num}.pt").numpy()
-    pred_classes = np.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/pred_signed_classes/0522c0{pat_num}_R_{def_num}.npy")
+    classes = torch.load(join(source_dir, "signed_classes/", f"{patient_fname}.pt")).numpy()
+    pred_classes = np.load(join("/path/to/predicted/classes/", f"{patient_fname}.npy"))     ## TODO: update path variable here ##
     visualise_pertubations(perturbed_mesh, verts, classes, pred_classes)
 
 if __name__ == '__main__':

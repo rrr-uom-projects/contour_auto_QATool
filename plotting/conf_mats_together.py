@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import numpy as np
 
-source = "C:/PhD/ESTRO22/QA_tool_data/testset_conf_mats/lr1e3_cosS_bs16_aggradd"
+source = "/path/to/result/images/directory/"    ## TODO: update path variable here ##
 
 im0 = plt.imread(source + ".png")
 im1 = plt.imread(source + "_blankCTAbl_0.png")

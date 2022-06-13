@@ -4,6 +4,7 @@ import torch
 import open3d as o3d
 import pyvista
 from copy import deepcopy
+from os.path import join
 
 def pyvistarise(mesh):
     return pyvista.PolyData(np.asarray(mesh.vertices), np.insert(np.asarray(mesh.triangles), 0, 3, axis=1), deep=True, n_faces=len(mesh.triangles))
@@ -40,24 +41,24 @@ def visualise_pertubations(pre_mesh, post_mesh, verts, classes):
     print(camera_pos)
 
 def main():
-    def_num = "7"
-    pat_num = "629"
+    patient_fname = "patient_fname"                                 ## TODO: update name variable here ##
+    source_dir = "/path/to/directory/containing/preprocessed/data/" ## TODO: update path variable here ##
 
-    verts = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/graph_objects/GS/0522c0{pat_num}_R.pt").pos.numpy()
-    faces = np.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/triangles_smooth/GS/0522c0{pat_num}_R.npy")
+    verts = torch.load(join(source_dir, "graph_objects/GS/", f"{patient_fname}.pt")).pos.numpy()
+    faces = np.load(join(source_dir, "triangles_smooth/GS/", f"{patient_fname}.npy"))
     gs_mesh = o3d.geometry.TriangleMesh()
     gs_mesh.vertices = o3d.utility.Vector3dVector(verts)
     gs_mesh.triangles = o3d.utility.Vector3iVector(faces)
 
-    verts = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/graph_objects/0522c0{pat_num}_R_{def_num}.pt").pos.numpy()
-    faces = np.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/triangles_smooth/0522c0{pat_num}_R_{def_num}.npy")
+    verts = torch.load(join(source_dir, "graph_objects/", f"{patient_fname}.pt")).pos.numpy()
+    faces = np.load(join(source_dir, "triangles_smooth/", f"{patient_fname}.npy"))
     perturbed_mesh = o3d.geometry.TriangleMesh()
     perturbed_mesh.vertices = o3d.utility.Vector3dVector(verts)
     perturbed_mesh.triangles = o3d.utility.Vector3iVector(faces)
 
     gs_mesh.compute_vertex_normals()
     perturbed_mesh.compute_vertex_normals()
-    classes = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/signed_classes/0522c0{pat_num}_R_{def_num}.pt").numpy()
+    classes = torch.load(join(source_dir, "signed_classes/", f"{patient_fname}.pt")).numpy()
     visualise_pertubations(gs_mesh, perturbed_mesh, verts, classes)
 
 if __name__ == '__main__':

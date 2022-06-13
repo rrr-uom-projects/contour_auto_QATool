@@ -5,7 +5,7 @@ import matplotlib.lines as mlines
 import numpy as np
 from os.path import join
 
-source_dir = "C:/PhD/MICCAI22/noPre_training_curve_data/"
+source_dir = "/path/to/directory/containing/training/curve/data/"   ## TODO: update path variable here ##
 
 fig, axs = plt.subplots(ncols=5, figsize=(10,4), sharey=True)
 

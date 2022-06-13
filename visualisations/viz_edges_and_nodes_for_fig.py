@@ -4,6 +4,7 @@ import torch
 import open3d as o3d
 import pyvista
 from copy import deepcopy
+from os.path import join
 
 def pyvistarise(mesh):
     return pyvista.PolyData(np.asarray(mesh.vertices), np.insert(np.asarray(mesh.triangles), 0, 3, axis=1), deep=True, n_faces=len(mesh.triangles))
@@ -35,21 +36,21 @@ def visualise_pertubations(mesh, verts, classes):
     plotter.camera.position = (267.23733688822307, 185.79964888533257, -37.21093737148561)
     plotter.camera.focal_point = (182.16842651367188, 203.39258575439453, 303.5139617919922)
     plotter.camera.up = (0.9701952368133866, -0.0017313380567325239, 0.2423183957794992)
-    camera_pos = plotter.show(screenshot="./QA_tool/visualisations/viz_edges_and_nodes_for_fig.png",window_size=[1600, 1000], auto_close=True)
+    camera_pos = plotter.show(screenshot="./viz_edges_and_nodes.png",window_size=[1600, 1000], auto_close=True)
     print(camera_pos)
 
 def main():
-    def_num = "7"
-    pat_num = "629"
-
-    verts = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/graph_objects/0522c0{pat_num}_R_{def_num}.pt").pos.numpy()
-    faces = np.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/triangles_smooth/0522c0{pat_num}_R_{def_num}.npy")
+    patient_fname = "patient_fname"                                 ## TODO: update name variable here ##
+    source_dir = "/path/to/directory/containing/preprocessed/data/" ## TODO: update path variable here ##
+    
+    verts = torch.load(join(source_dir, "graph_objects/", f"{patient_fname}.pt")).pos.numpy()
+    faces = np.load(join(source_dir, "triangles_smooth/", f"{patient_fname}.npy"))
     perturbed_mesh = o3d.geometry.TriangleMesh()
     perturbed_mesh.vertices = o3d.utility.Vector3dVector(verts)
     perturbed_mesh.triangles = o3d.utility.Vector3iVector(faces)
 
     perturbed_mesh.compute_vertex_normals()
-    classes = torch.load(f"C:/PhD/ESTRO22/QA_tool_data/more_var_partial/signed_classes/0522c0{pat_num}_R_{def_num}.pt").numpy()
+    classes = torch.load(join(source_dir, "signed_classes/", f"{patient_fname}.pt")).numpy()
     visualise_pertubations(perturbed_mesh, verts, classes)
 
 if __name__ == '__main__':
