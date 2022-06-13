@@ -24,7 +24,6 @@ source_dir = "/path/to/directory/containing/the/nikolov_et_al/nrrd/data"    ## T
 output_dir = "/path/to/directory/in/which/to/put/preprocessed/data/"        ## TODO: update path variable here ##
 pat_dirs = list(filter(lambda x: x != "TCGA-CV-A6JY", sorted(getDirs(source_dir))))
 
-global_dists = np.array([0])
 global_signed_classes = torch.zeros((5))
 # resample all CTs to isotropic (1 x 1 x 2.5)
 for pdx, pat_dir in enumerate(tqdm(pat_dirs)):
@@ -144,11 +143,9 @@ for pdx, pat_dir in enumerate(tqdm(pat_dirs)):
                 # save node patches
                 torch.save(patches_tensor, join(output_dir, "ct_patches", f"{pat_dir}_{seg_fname[8]}_{deformation_num}.pt"))
 
-                # save bi-directional dists
+                # compute signed dists
                 points = (np.arange(npy_seg.shape[0]), np.arange(npy_seg.shape[1]), np.arange(npy_seg.shape[2]))
                 signed_dists = interpn(points=points, values=dist_xfm, xi=node_coords.numpy())
-                np.save(join(output_dir, "GS_signed_dists", f"{pat_dir}_{seg_fname[8]}_{deformation_num}.npy"), signed_dists)
-                global_dists = np.concatenate((global_dists, signed_dists), axis=0)
 
                 # create classes for each node to be classified into 
                 # signed class bins 0: -2.5mm-, 1: -2.5 - -1mm, 2: -1 - 1mm, 3: 1 - 2.5mm, 4: 2.5mm+
@@ -159,6 +156,4 @@ for pdx, pat_dir in enumerate(tqdm(pat_dirs)):
                 global_signed_classes += torch.tensor([node_classes_signed[:,i].sum() for i in range(n_classes)])
                 torch.save(node_classes_signed, join(output_dir, "signed_classes", f"{pat_dir}_{seg_fname[8]}_{deformation_num}.pt"))
 
-global_dists = np.delete(global_dists, 0, 0)
-np.save(join(output_dir, "all_GS_signed_dists.npy"), global_dists)
 torch.save(global_signed_classes, join(output_dir, "all_signed_classes.pt"))
