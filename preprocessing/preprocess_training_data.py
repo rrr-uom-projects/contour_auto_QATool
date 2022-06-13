@@ -127,9 +127,7 @@ for pdx, pat_dir in enumerate(tqdm(pat_dirs)):
                     # test if node is NaN somehow
                     if pos.isnan().any():
                         print(f"Nan-node detected, let's try this again... (seg: {pat_dir}, def_num: {deformation_num})")
-                        exit()
                     else:
-                        #o3d.io.write_triangle_mesh(join(output_dir, "example_meshes", f"{pat_dir}_{seg_fname[8]}_{deformation_num}.ply"), seg_mesh)
                         np.save(join(output_dir, "triangles_smooth", f"{pat_dir}_{seg_fname[8]}_{deformation_num}.npy"), triangles_smooth)
                         torch.save(data, join(output_dir, "graph_objects", f"{pat_dir}_{seg_fname[8]}_{deformation_num}.pt"))
                         nan_nodes = False
