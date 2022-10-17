@@ -20,3 +20,4 @@ torch-spline-conv==1.2.1
 torchaudio==0.10.1+rocm4.1
 torchvision==0.11.2+cu111
 tqdm==4.64.0
+vtk==9.1.0
