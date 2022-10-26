@@ -43,7 +43,8 @@ def main():
         # set directories
         root_dir = "/path/to/root/directory/"                           ## TODO: update path variable here ##
         source_dir = "/path/to/directory/containing/preprocessed/data/" ## TODO: update path variable here ##
-        exp_dir, exp_name = get_checkpoint_dir(root_dir=join(root_dir, f"qaTool/models/classification/"), args=args)
+        models_dir = join(root_dir, "models/classification/")
+        exp_dir, exp_name = get_checkpoint_dir(root_dir=models_dir, args=args)
         # add specific fold num
         checkpoint_dir = join(exp_dir, f"fold{fold_num}")
         # data directories

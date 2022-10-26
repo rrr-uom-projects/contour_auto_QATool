@@ -25,7 +25,10 @@ def main():
     # set directories
     root_dir = "/path/to/root/directory/"                           ## TODO: update path variable here ##
     source_dir = "/path/to/directory/containing/preprocessed/data/" ## TODO: update path variable here ##
-    checkpoint_dir = join(root_dir, f"qaTool/models/patchPredictor/fold{args.fold_num}")
+    try_mkdir(join(root_dir, "models/"))
+    models_dir =  join(root_dir, "models/patchPredictor/")
+    try_mkdir(models_dir)
+    checkpoint_dir = join(models_dir, f"fold{args.fold_num}/")
     ct_subvolume_dir = join(source_dir, "pretrain_ct_patches/")
     uniform_points_dir = join(source_dir, "pretrain_uniform_points/")
 

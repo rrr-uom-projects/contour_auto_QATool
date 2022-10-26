@@ -2,7 +2,7 @@ from os.path import join
 import torch
 from torch.utils.data import DataLoader
 
-from utils import k_fold_split_train_val_test, RunningAverage
+from utils import k_fold_split_train_val_test, RunningAverage, try_mkdir
 from model import patchPredictor
 from datasets import patchPredictor_dataset
 
@@ -11,7 +11,8 @@ def main():
         # set directories
         root_dir = "/path/to/root/directory/"                           ## TODO: update path variable here ##
         source_dir = "/path/to/directory/containing/preprocessed/data/" ## TODO: update path variable here ##
-        checkpoint_dir = join(root_dir, f"qaTool/models/patchPredictor/fold{fold_num}")
+        models_dir =  join(root_dir, "models/patchPredictor/")
+        checkpoint_dir = join(models_dir, f"fold{fold_num}")
         ct_subvolume_dir = join(source_dir, "pretrain_ct_patches/")
         uniform_points_dir = join(source_dir, "pretrain_uniform_points/")
 
