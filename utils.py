@@ -231,8 +231,6 @@ def get_checkpoint_dir(root_dir, args):
         checkpoint_dir = checkpoint_dir + "_GNNAbl"
     if args.preAbl:
         checkpoint_dir = checkpoint_dir + "_noPre"
-    if args.loBeta:
-        checkpoint_dir = checkpoint_dir + "_loBeta"
     # finally get full experiment type
     exp_type = checkpoint_dir[len_orig:]
     return checkpoint_dir, exp_type
